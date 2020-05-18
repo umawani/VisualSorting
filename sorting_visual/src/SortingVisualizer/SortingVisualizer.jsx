@@ -1,4 +1,5 @@
 import React from 'react';
+import './SortingVisualizer.css';
 
 
 export default class SortingVisualizer extends React.Component {
@@ -28,10 +29,11 @@ export default class SortingVisualizer extends React.Component {
     const {array} = this.state;
 
     return (
-      <div>
+      <div className="array-container">
         {array.map((value, index) => (
-          <div className="array-bar" key={index}>
-            {value}
+          <div className="array-bar"
+          key={index}
+          style={{backgroundColor : 'red', height : `${value}px`,}}>
           </div>
         ))}
       </div>
