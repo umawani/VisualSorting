@@ -20,7 +20,7 @@ export default class SortingVisualizer extends React.Component {
   resetArray(){
     const array = [];
     for(let i = 0; i < 100; i++){
-      array.push(randomIntFromInterval(5,1000));
+      array.push(randomIntFromInterval(5,600));
     }
     this.setState({array});
   }
@@ -29,13 +29,22 @@ export default class SortingVisualizer extends React.Component {
     const {array} = this.state;
 
     return (
-      <div className="array-container">
-        {array.map((value, index) => (
-          <div className="array-bar"
-          key={index}
-          style={{backgroundColor : 'red', height : `${value}px`,}}>
-          </div>
-        ))}
+      <div className="page-container">
+        <div className="title-container">
+          Sorting Visualizer!
+        </div>
+        <div className="array-container">
+          {array.map((value, index) => (
+            <div className="array-bar"
+            key={index}
+            style={{backgroundColor : 'turquoise', height : `${value}px`,}}>
+            </div>
+          ))}
+        </div>
+        <div className="buttons-container">
+          <button onClick={() => this.resetArray()}> Generate Array! </button>
+          <button onClick={() => this.mergeSort()}> Merge Sort! </button>
+        </div>
       </div>
     );
   }
