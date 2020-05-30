@@ -5,7 +5,7 @@ import {getMergeSortAnimations} from '../SortingAlgorithms/MergeSort.js'
 
 export default class SortingVisualizer extends React.Component {
   constructor(props){
-    super(props
+    super(props)
     this.state = {
       array : [],
     };
