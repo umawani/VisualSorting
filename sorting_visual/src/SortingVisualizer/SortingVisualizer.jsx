@@ -25,8 +25,28 @@ export default class SortingVisualizer extends React.Component {
   }
 
   mergeSort(){
-    //getMergeSortAnimations(this.state.array);
-    testAlgorithm();
+    const animations = getMergeSortAnimations(this.state.array);
+    for(let i = 0; i < animations.length; i++){
+      const arrayBars = document.getElementsByClassName('array-bar');
+      const isColorChange = i % 3 !== 2;
+      if(isColorChange){
+        const [barOneIndx, barTwoIndx] = animations[i];
+        const barOneIndxStyle = arrayBars[barOneIndx].style;
+        const barTwoIndxStyle = arrayBars[barTwoIndx].style;
+        const color = i % 3 === 0 ? 'red' : 'turquoise';
+        setTimeout(() => {
+          barOneIndxStyle.backgroundColor = color;
+          barTwoIndxStyle.backgroundColor = color;
+        }, i * 5);
+      }
+      else{
+        setTimeout(() => {
+          const [barOneIndx, newHeight] = animations[i];
+          const barOneIndxStyle = arrayBars[barOneIndx].style;
+          barOneIndxStyle.height = `${newHeight}px`;
+        }, i * 5);
+      }
+    }
   }
 
   render() {
@@ -62,7 +82,7 @@ function generateRandomArray(){
   let array = []
   let i = 0;
   while(i < 10){
-    array.push(randomIntFromInterval(1,3000));
+    array.push(randomIntFromInterval(5,600));
     i++;
   }
   return array;
