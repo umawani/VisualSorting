@@ -8,6 +8,7 @@ export default class SortingVisualizer extends React.Component {
     super(props)
     this.state = {
       array : [],
+      processing : false,
     };
   }
 
@@ -17,14 +18,27 @@ export default class SortingVisualizer extends React.Component {
 
 
   resetArray(){
+    if(this.state.processing){
+      return;
+    }
+    this.setState({processing : true});
     const array = [];
     for(let i = 0; i < 100; i++){
       array.push(randomIntFromInterval(5,600));
     }
     this.setState({array});
+    this.setState({processing : false});
   }
 
   mergeSort(){
+    console.log(this.state.processing);
+    if(this.state.processing){
+      return;
+    }
+
+    //console.log("before = " + this.state.processing);
+    this.setState({processing : true});
+    //console.log("after = " + this.state.processing);*/
     const animations = getMergeSortAnimations(this.state.array);
     for(let i = 0; i < animations.length; i++){
       const arrayBars = document.getElementsByClassName('array-bar');
@@ -37,16 +51,17 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
           barOneIndxStyle.backgroundColor = color;
           barTwoIndxStyle.backgroundColor = color;
-        }, i * 5);
+        }, i * 15);
       }
       else{
         setTimeout(() => {
           const [barOneIndx, newHeight] = animations[i];
           const barOneIndxStyle = arrayBars[barOneIndx].style;
           barOneIndxStyle.height = `${newHeight}px`;
-        }, i * 5);
+        }, i * 15);
       }
     }
+    this.setState({processing : false});
   }
 
   render() {
