@@ -9,6 +9,7 @@ export default class SortingVisualizer extends React.Component {
     this.state = {
       array : [],
       processing : false,
+      checked : false,
     };
   }
 
@@ -18,28 +19,17 @@ export default class SortingVisualizer extends React.Component {
 
 
   resetArray(){
-    if(this.state.processing){
-      return;
-    }
-    this.setState({processing : true});
     const array = [];
     for(let i = 0; i < 100; i++){
       array.push(randomIntFromInterval(5,600));
     }
-    this.setState({array});
-    this.setState({processing : false});
+    this.setState({array : array, processing : false});
   }
 
   mergeSort(){
-    console.log(this.state.processing);
-    if(this.state.processing){
-      return;
-    }
-
-    //console.log("before = " + this.state.processing);
-    this.setState({processing : true});
-    //console.log("after = " + this.state.processing);*/
-    const animations = getMergeSortAnimations(this.state.array);
+    let aux = this.state.array.slice();
+    let final = this.state.array.slice();
+    const animations = getMergeSortAnimations(aux);
     for(let i = 0; i < animations.length; i++){
       const arrayBars = document.getElementsByClassName('array-bar');
       const isColorChange = i % 3 !== 2;
@@ -51,22 +41,38 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
           barOneIndxStyle.backgroundColor = color;
           barTwoIndxStyle.backgroundColor = color;
-        }, i * 15);
+        }, i * 10);
       }
       else{
         setTimeout(() => {
           const [barOneIndx, newHeight] = animations[i];
-          const barOneIndxStyle = arrayBars[barOneIndx].style;
-          barOneIndxStyle.height = `${newHeight}px`;
-        }, i * 15);
+          final[barOneIndx] = newHeight;
+          this.setState({array : final});
+        }, i * 10);
       }
     }
-    this.setState({processing : false});
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    Object.entries(this.props).forEach(([key, val]) =>
+      prevProps[key] !== val && console.log(`Prop '${key}' changed`)
+    );
+    if (this.state) {
+      Object.entries(this.state).forEach(([key, val]) =>
+        prevState[key] !== val && console.log(`State '${key}' changed`)
+      );
+    }
+    this.completeAlgorithm();
+  }
+
+  completeAlgorithm(){
+    if(checkSorted(this.state.array) && !this.state.checked){
+      this.setState({processing : false, checked : true});
+    }
   }
 
   render() {
     const {array} = this.state;
-
     return (
       <div className="page-container">
         <div className="title-container">
@@ -81,8 +87,13 @@ export default class SortingVisualizer extends React.Component {
           ))}
         </div>
         <div className="buttons-container">
-          <button onClick={() => this.resetArray()}> Generate Array! </button>
-          <button onClick={() => this.mergeSort()}> Merge Sort! </button>
+          <button onClick=
+          {() => this.state.processing ? console.log("in process") :
+            (this.setState({processing : true}, () => this.resetArray()))}> Generate Array! </button>
+          <button onClick=
+          {() => this.state.processing ? console.log("in process") :
+            (this.setState({processing : true, checked : false} ,
+            () => this.mergeSort()))}> Merge Sort! </button>
         </div>
       </div>
     );
