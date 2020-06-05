@@ -1,6 +1,7 @@
 import React from 'react';
 import './SortingVisualizer.css';
 import {getMergeSortAnimations} from '../SortingAlgorithms/MergeSort.js'
+import {getInsertionSortAnimations} from '../SortingAlgorithms/InsertionSort.js'
 
 
 export default class SortingVisualizer extends React.Component {
@@ -30,8 +31,9 @@ export default class SortingVisualizer extends React.Component {
     let aux = this.state.array.slice();
     let final = this.state.array.slice();
     const animations = getMergeSortAnimations(aux);
+    const arrayBars = document.getElementsByClassName('array-bar');
     for(let i = 0; i < animations.length; i++){
-      const arrayBars = document.getElementsByClassName('array-bar');
+
       const isColorChange = i % 3 !== 2;
       if(isColorChange){
         const [barOneIndx, barTwoIndx] = animations[i];
@@ -52,6 +54,36 @@ export default class SortingVisualizer extends React.Component {
       }
     }
   }
+
+  insertionSort(){
+    let aux = this.state.array.slice();
+    const animations = getInsertionSortAnimations(this.state.array.slice());
+    const arrayBars = document.getElementsByClassName('array-bar');
+    for(let  i = 0; i < animations.length; i++){
+      if("swap" in animations[i]){
+        setTimeout(() => {
+        aux[animations[i]["swap"][0]] =animations[i]["swap"][1];
+        this.setState({array : aux});
+      }, i * 1);
+      }
+      else if("frontier" in animations[i]){
+        setTimeout(() => {
+          arrayBars[animations[i]["frontier"]].style.backgroundColor = 'LightGreen';
+        },i * 1);
+      }
+      else if("normal" in animations[i]){
+        setTimeout(() => {
+          arrayBars[animations[i]["normal"]].style.backgroundColor = 'turquoise';
+        },i * 1);
+      }
+      else{
+        setTimeout(() => {
+          arrayBars[animations[i]["compare"]].style.backgroundColor = 'red';
+        },i * 1);
+      }
+    }
+  }
+
 
   componentDidUpdate(prevProps, prevState) {
     Object.entries(this.props).forEach(([key, val]) =>
@@ -94,6 +126,9 @@ export default class SortingVisualizer extends React.Component {
           {() => this.state.processing ? console.log("in process") :
             (this.setState({processing : true, checked : false} ,
             () => this.mergeSort()))}> Merge Sort! </button>
+          <button onClick= {() => this.state.processing ? console.log("in process") :
+            (this.setState({processing : true, checked : false} ,
+            () => this.insertionSort()))}> Insertion Sort! </button>
         </div>
       </div>
     );
@@ -131,7 +166,7 @@ function testAlgorithm(){
   let i = 0;
   while(i < 100){
     let random = generateRandomArray();
-    toCheck = getMergeSortAnimations(random);
+    toCheck = getInsertionSortAnimations(random);
     console.log(checkSorted(toCheck));
     i++;
   }
