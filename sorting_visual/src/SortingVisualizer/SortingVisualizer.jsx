@@ -2,6 +2,7 @@ import React from 'react';
 import './SortingVisualizer.css';
 import {getMergeSortAnimations} from '../SortingAlgorithms/MergeSort.js'
 import {getInsertionSortAnimations} from '../SortingAlgorithms/InsertionSort.js'
+import {getBubbleSortAnimations} from '../SortingAlgorithms/BubbleSort.js'
 
 
 export default class SortingVisualizer extends React.Component {
@@ -84,6 +85,30 @@ export default class SortingVisualizer extends React.Component {
     }
   }
 
+  bubbleSort(){
+    let aux = this.state.array.slice();
+    const animations = getBubbleSortAnimations(this.state.array.slice());
+    const arrayBars = document.getElementsByClassName('array-bar');
+    for(let  i = 0; i < animations.length; i++){
+      if("swap" in animations[i]){
+        setTimeout(() => {
+        aux[animations[i]["swap"][0]] =animations[i]["swap"][1];
+        this.setState({array : aux});
+        }, i * 1);
+      }
+      else if("normal" in animations[i]){
+        setTimeout(() => {
+          arrayBars[animations[i]["normal"]].style.backgroundColor = 'turquoise';
+        },i * 1);
+      }
+      else{
+        setTimeout(() => {
+          arrayBars[animations[i]["compare"]].style.backgroundColor = 'red';
+        },i * 1);
+      }
+    }
+  }
+
 
   componentDidUpdate(prevProps, prevState) {
     Object.entries(this.props).forEach(([key, val]) =>
@@ -129,6 +154,9 @@ export default class SortingVisualizer extends React.Component {
           <button onClick= {() => this.state.processing ? console.log("in process") :
             (this.setState({processing : true, checked : false} ,
             () => this.insertionSort()))}> Insertion Sort! </button>
+            <button onClick= {() => this.state.processing ? console.log("in process") :
+              (this.setState({processing : true, checked : false} ,
+              () => this.bubbleSort()))}> Bubble Sort! </button>
         </div>
       </div>
     );
@@ -166,7 +194,7 @@ function testAlgorithm(){
   let i = 0;
   while(i < 100){
     let random = generateRandomArray();
-    toCheck = getInsertionSortAnimations(random);
+    toCheck = getBubbleSortAnimations(random);
     console.log(checkSorted(toCheck));
     i++;
   }
