@@ -1,15 +1,17 @@
-.array-container{
-  display: flex;
-  justify-content: center;
-  align-self: center;
-  align-items: flex-end;
-  flex: 3;
+body{
+  height: 100%;
+  width: 100%;
+  background-color: #F5F2D0
 }
+
+
+#bars-container{
+
+
+}
+
 .array-bar{
   width: 5px;
   display: inline-block;
   margin: 3px;
-}
-.title-container{
-  margin-bottom: 100px;
 }

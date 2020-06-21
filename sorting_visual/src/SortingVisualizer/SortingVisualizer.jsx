@@ -1,9 +1,13 @@
 import React from 'react';
 import './SortingVisualizer.css';
+import Typography from '@material-ui/core/Typography';
 import {getMergeSortAnimations} from '../SortingAlgorithms/MergeSort.js'
 import {getInsertionSortAnimations} from '../SortingAlgorithms/InsertionSort.js'
 import {getBubbleSortAnimations} from '../SortingAlgorithms/BubbleSort.js'
 
+const INITIAL_COLOR = '#03a9f4';
+const PROCESSING_COLOR = 'gold';
+const FRONTIER_COLOR = 'red';
 
 export default class SortingVisualizer extends React.Component {
   constructor(props){
@@ -40,7 +44,7 @@ export default class SortingVisualizer extends React.Component {
         const [barOneIndx, barTwoIndx] = animations[i];
         const barOneIndxStyle = arrayBars[barOneIndx].style;
         const barTwoIndxStyle = arrayBars[barTwoIndx].style;
-        const color = i % 3 === 0 ? 'red' : 'turquoise';
+        const color = i % 3 === 0 ? PROCESSING_COLOR : INITIAL_COLOR;
         setTimeout(() => {
           barOneIndxStyle.backgroundColor = color;
           barTwoIndxStyle.backgroundColor = color;
@@ -65,22 +69,22 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
         aux[animations[i]["swap"][0]] =animations[i]["swap"][1];
         this.setState({array : aux});
-      }, i * 1);
+      }, i * 10);
       }
       else if("frontier" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["frontier"]].style.backgroundColor = 'LightGreen';
-        },i * 1);
+          arrayBars[animations[i]["frontier"]].style.backgroundColor = FRONTIER_COLOR;
+        },i * 10);
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["normal"]].style.backgroundColor = 'turquoise';
-        },i * 1);
+          arrayBars[animations[i]["normal"]].style.backgroundColor = INITIAL_COLOR;
+        },i * 10);
       }
       else{
         setTimeout(() => {
-          arrayBars[animations[i]["compare"]].style.backgroundColor = 'red';
-        },i * 1);
+          arrayBars[animations[i]["compare"]].style.backgroundColor = PROCESSING_COLOR;
+        },i * 10);
       }
     }
   }
@@ -98,12 +102,12 @@ export default class SortingVisualizer extends React.Component {
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["normal"]].style.backgroundColor = 'turquoise';
+          arrayBars[animations[i]["normal"]].style.backgroundColor = INITIAL_COLOR;
         },i * 1);
       }
       else{
         setTimeout(() => {
-          arrayBars[animations[i]["compare"]].style.backgroundColor = 'red';
+          arrayBars[animations[i]["compare"]].style.backgroundColor = PROCESSING_COLOR;
         },i * 1);
       }
     }
@@ -131,19 +135,17 @@ export default class SortingVisualizer extends React.Component {
   render() {
     const {array} = this.state;
     return (
-      <div className="page-container">
-        <div className="title-container">
-          Sorting Visualizer!
-        </div>
-        <div className="array-container">
+      <body>
+        <Typography variant="h1" color="inherit">Sorting Visualizer</Typography>
+        <div id = "bars-container">
           {array.map((value, index) => (
             <div className="array-bar"
             key={index}
-            style={{backgroundColor : 'turquoise', height : `${value}px`,}}>
+            style={{backgroundColor : '#03a9f4', height : `${value}px`,}}>
             </div>
           ))}
         </div>
-        <div className="buttons-container">
+        <div>
           <button onClick=
           {() => this.state.processing ? console.log("in process") :
             (this.setState({processing : true}, () => this.resetArray()))}> Generate Array! </button>
@@ -158,7 +160,7 @@ export default class SortingVisualizer extends React.Component {
               (this.setState({processing : true, checked : false} ,
               () => this.bubbleSort()))}> Bubble Sort! </button>
         </div>
-      </div>
+      </body>
     );
   }
 }
