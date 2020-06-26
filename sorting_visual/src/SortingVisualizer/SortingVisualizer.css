@@ -4,14 +4,27 @@ body{
   background-color: #F5F2D0
 }
 
-
-#bars-container{
-
-
-}
-
 .array-bar{
   width: 5px;
   display: inline-block;
   margin: 3px;
+}
+
+#page-container {
+  position: relative;
+  min-height: 100vh;
+  margin-left: 250px;
+  margin-right: 250px;
+}
+
+#content-wrap {
+  padding-bottom: 2.5rem;    /* Footer height */
+
+}
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 10%;        /* Footer height */
+  background-color: black
 }

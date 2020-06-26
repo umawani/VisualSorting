@@ -1,6 +1,14 @@
 import React from 'react';
 import './SortingVisualizer.css';
+
+
 import Typography from '@material-ui/core/Typography';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+
+
 import {getMergeSortAnimations} from '../SortingAlgorithms/MergeSort.js'
 import {getInsertionSortAnimations} from '../SortingAlgorithms/InsertionSort.js'
 import {getBubbleSortAnimations} from '../SortingAlgorithms/BubbleSort.js'
@@ -8,6 +16,7 @@ import {getBubbleSortAnimations} from '../SortingAlgorithms/BubbleSort.js'
 const INITIAL_COLOR = '#03a9f4';
 const PROCESSING_COLOR = 'gold';
 const FRONTIER_COLOR = 'red';
+
 
 export default class SortingVisualizer extends React.Component {
   constructor(props){
@@ -26,9 +35,10 @@ export default class SortingVisualizer extends React.Component {
 
   resetArray(){
     const array = [];
-    for(let i = 0; i < 100; i++){
+    for(let i = 0; i < 99; i++){
       array.push(randomIntFromInterval(5,600));
     }
+    array.push(600)
     this.setState({array : array, processing : false});
   }
 
@@ -135,32 +145,48 @@ export default class SortingVisualizer extends React.Component {
   render() {
     const {array} = this.state;
     return (
-      <body>
-        <Typography variant="h1" color="inherit">Sorting Visualizer</Typography>
-        <div id = "bars-container">
-          {array.map((value, index) => (
-            <div className="array-bar"
-            key={index}
-            style={{backgroundColor : '#03a9f4', height : `${value}px`,}}>
-            </div>
-          ))}
-        </div>
-        <div>
-          <button onClick=
-          {() => this.state.processing ? console.log("in process") :
-            (this.setState({processing : true}, () => this.resetArray()))}> Generate Array! </button>
-          <button onClick=
-          {() => this.state.processing ? console.log("in process") :
-            (this.setState({processing : true, checked : false} ,
-            () => this.mergeSort()))}> Merge Sort! </button>
-          <button onClick= {() => this.state.processing ? console.log("in process") :
-            (this.setState({processing : true, checked : false} ,
-            () => this.insertionSort()))}> Insertion Sort! </button>
-            <button onClick= {() => this.state.processing ? console.log("in process") :
-              (this.setState({processing : true, checked : false} ,
-              () => this.bubbleSort()))}> Bubble Sort! </button>
-        </div>
-      </body>
+      <div id="page-container">
+        <header>
+          <Typography variant="h3" color="inherit">Sorting Visualizer</Typography>
+        </header>
+        <body>
+          <div id="content-wrap">
+              {array.map((value, index) => (
+                <div className="array-bar"
+                key={index}
+                style={{backgroundColor : '#03a9f4', height : `${value}px`,}}>
+                </div>
+              ))}
+          </div>
+          <footer>
+            <Container fluid>
+              <Row>
+                <Col>
+                  <Button variant='dark' onClick=
+                  {() => this.state.processing ? console.log("in process") :
+                    (this.setState({processing : true}, () => this.resetArray()))}> Generate Array! </Button>
+                </Col>
+                <Col>
+                  <Button variant='dark' onClick=
+                  {() => this.state.processing ? console.log("in process") :
+                    (this.setState({processing : true, checked : false} ,
+                    () => this.mergeSort()))}> Merge Sort! </Button>
+                </Col>
+                <Col>
+                  <Button variant='dark' onClick= {() => this.state.processing ? console.log("in process") :
+                    (this.setState({processing : true, checked : false} ,
+                    () => this.insertionSort()))}> Insertion Sort! </Button>
+                </Col>
+                <Col>
+                  <Button variant='dark' onClick= {() => this.state.processing ? console.log("in process") :
+                    (this.setState({processing : true, checked : false} ,
+                    () => this.bubbleSort()))}> Bubble Sort! </Button>
+                </Col>
+              </Row>
+            </Container>
+          </footer>
+        </body>
+      </div>
     );
   }
 }
