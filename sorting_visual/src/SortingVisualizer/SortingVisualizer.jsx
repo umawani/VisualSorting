@@ -3,6 +3,7 @@ import './SortingVisualizer.css';
 
 
 import Typography from '@material-ui/core/Typography';
+import Slider from '@material-ui/core/Slider';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -22,6 +23,7 @@ export default class SortingVisualizer extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      size : 100,
       array : [],
       processing : false,
       checked : false,
@@ -35,7 +37,7 @@ export default class SortingVisualizer extends React.Component {
 
   resetArray(){
     const array = [];
-    for(let i = 0; i < 99; i++){
+    for(let i = 0; i < this.state.size - 1; i++){
       array.push(randomIntFromInterval(5,600));
     }
     array.push(600)
@@ -83,17 +85,20 @@ export default class SortingVisualizer extends React.Component {
       }
       else if("frontier" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["frontier"]].style.backgroundColor = FRONTIER_COLOR;
+          arrayBars[animations[i]["frontier"]].style.backgroundColor
+            = FRONTIER_COLOR;
         },i * 10);
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["normal"]].style.backgroundColor = INITIAL_COLOR;
+          arrayBars[animations[i]["normal"]].style.backgroundColor
+            = INITIAL_COLOR;
         },i * 10);
       }
       else{
         setTimeout(() => {
-          arrayBars[animations[i]["compare"]].style.backgroundColor = PROCESSING_COLOR;
+          arrayBars[animations[i]["compare"]].style.backgroundColor
+            = PROCESSING_COLOR;
         },i * 10);
       }
     }
@@ -112,12 +117,14 @@ export default class SortingVisualizer extends React.Component {
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
-          arrayBars[animations[i]["normal"]].style.backgroundColor = INITIAL_COLOR;
+          arrayBars[animations[i]["normal"]].style.backgroundColor
+            = INITIAL_COLOR;
         },i * 1);
       }
       else{
         setTimeout(() => {
-          arrayBars[animations[i]["compare"]].style.backgroundColor = PROCESSING_COLOR;
+          arrayBars[animations[i]["compare"]].style.backgroundColor
+            = PROCESSING_COLOR;
         },i * 1);
       }
     }
@@ -143,18 +150,22 @@ export default class SortingVisualizer extends React.Component {
   }
 
   render() {
+      const handleSliderChange = (event, newValue) =>
+        {this.setState({size: newValue}); this.resetArray()};
     const {array} = this.state;
     return (
       <div id="page-container">
         <header>
-          <Typography variant="h3" color="inherit">Sorting Visualizer</Typography>
+          <Typography variant="h3" color="inherit">
+            Sorting Visualizer
+          </Typography>
         </header>
         <body>
           <div id="content-wrap">
               {array.map((value, index) => (
                 <div className="array-bar"
                 key={index}
-                style={{backgroundColor : '#03a9f4', height : `${value}px`,}}>
+                style={{backgroundColor : '#03a9f4', height : `${value}px`}}>
                 </div>
               ))}
           </div>
@@ -164,7 +175,8 @@ export default class SortingVisualizer extends React.Component {
                 <Col>
                   <Button variant='dark' onClick=
                   {() => this.state.processing ? console.log("in process") :
-                    (this.setState({processing : true}, () => this.resetArray()))}> Generate Array! </Button>
+                    (this.setState({processing : true},
+                      () => this.resetArray()))}> Generate Array! </Button>
                 </Col>
                 <Col>
                   <Button variant='dark' onClick=
@@ -173,14 +185,32 @@ export default class SortingVisualizer extends React.Component {
                     () => this.mergeSort()))}> Merge Sort! </Button>
                 </Col>
                 <Col>
-                  <Button variant='dark' onClick= {() => this.state.processing ? console.log("in process") :
+                  <Button variant='dark' onClick= {() => this.state.processing ?
+                    console.log("in process") :
                     (this.setState({processing : true, checked : false} ,
                     () => this.insertionSort()))}> Insertion Sort! </Button>
                 </Col>
                 <Col>
-                  <Button variant='dark' onClick= {() => this.state.processing ? console.log("in process") :
+                  <Button
+                   variant='dark' onClick= {() => this.state.processing ?
+                    console.log("in process") :
                     (this.setState({processing : true, checked : false} ,
                     () => this.bubbleSort()))}> Bubble Sort! </Button>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <Slider
+                    value={this.state.size}
+                    step={1}
+                    min={10}
+                    max={100}
+                    valueLabelDisplay="auto"
+                    aria-labelledby="discrete-slider"
+                    onChange={handleSliderChange}
+                    marks
+                    disabled={this.state.processing ? true : false}
+                  />
                 </Col>
               </Row>
             </Container>
