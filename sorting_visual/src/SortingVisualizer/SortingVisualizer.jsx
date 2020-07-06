@@ -23,6 +23,7 @@ export default class SortingVisualizer extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      speed : 50,
       size : 100,
       array : [],
       processing : false,
@@ -45,6 +46,7 @@ export default class SortingVisualizer extends React.Component {
   }
 
   mergeSort(){
+    const speed = this.setSpeed();
     let aux = this.state.array.slice();
     let final = this.state.array.slice();
     const animations = getMergeSortAnimations(aux);
@@ -60,19 +62,20 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
           barOneIndxStyle.backgroundColor = color;
           barTwoIndxStyle.backgroundColor = color;
-        }, i * 10);
+        }, i * speed);
       }
       else{
         setTimeout(() => {
           const [barOneIndx, newHeight] = animations[i];
           final[barOneIndx] = newHeight;
           this.setState({array : final});
-        }, i * 10);
+        }, i * speed);
       }
     }
   }
 
   insertionSort(){
+    const speed = this.setSpeed();
     let aux = this.state.array.slice();
     const animations = getInsertionSortAnimations(this.state.array.slice());
     const arrayBars = document.getElementsByClassName('array-bar');
@@ -81,30 +84,31 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
         aux[animations[i]["swap"][0]] =animations[i]["swap"][1];
         this.setState({array : aux});
-      }, i * 10);
+      }, i * speed);
       }
       else if("frontier" in animations[i]){
         setTimeout(() => {
           arrayBars[animations[i]["frontier"]].style.backgroundColor
             = FRONTIER_COLOR;
-        },i * 10);
+        },i * speed);
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
           arrayBars[animations[i]["normal"]].style.backgroundColor
             = INITIAL_COLOR;
-        },i * 10);
+        },i * speed);
       }
       else{
         setTimeout(() => {
           arrayBars[animations[i]["compare"]].style.backgroundColor
             = PROCESSING_COLOR;
-        },i * 10);
+        },i * speed);
       }
     }
   }
 
   bubbleSort(){
+    const speed = this.setSpeed();
     let aux = this.state.array.slice();
     const animations = getBubbleSortAnimations(this.state.array.slice());
     const arrayBars = document.getElementsByClassName('array-bar');
@@ -113,19 +117,19 @@ export default class SortingVisualizer extends React.Component {
         setTimeout(() => {
         aux[animations[i]["swap"][0]] =animations[i]["swap"][1];
         this.setState({array : aux});
-        }, i * 1);
+      }, i * speed);
       }
       else if("normal" in animations[i]){
         setTimeout(() => {
           arrayBars[animations[i]["normal"]].style.backgroundColor
             = INITIAL_COLOR;
-        },i * 1);
+        },i * speed);
       }
       else{
         setTimeout(() => {
           arrayBars[animations[i]["compare"]].style.backgroundColor
             = PROCESSING_COLOR;
-        },i * 1);
+        },i * speed);
       }
     }
   }
@@ -149,6 +153,10 @@ export default class SortingVisualizer extends React.Component {
     }
   }
 
+  setSpeed(){
+    return 110-this.state.size;
+  }
+
   render() {
       const handleSliderChange = (event, newValue) =>
         {this.setState({size: newValue}); this.resetArray()};
@@ -165,7 +173,9 @@ export default class SortingVisualizer extends React.Component {
               {array.map((value, index) => (
                 <div className="array-bar"
                 key={index}
-                style={{backgroundColor : '#03a9f4', height : `${value}px`}}>
+                style={{backgroundColor : '#03a9f4',
+                  width:`${calculateWidth(this.state.size)}px`, 
+                  height : `${value}px`}}>
                 </div>
               ))}
           </div>
@@ -173,36 +183,38 @@ export default class SortingVisualizer extends React.Component {
             <Container fluid>
               <Row>
                 <Col>
-                  <Button variant='dark' onClick=
-                  {() => this.state.processing ? console.log("in process") :
+                  <Button variant='dark' disabled={this.state.processing? true :
+                      false} onClick=
+                      {() =>
                     (this.setState({processing : true},
                       () => this.resetArray()))}> Generate Array! </Button>
                 </Col>
                 <Col>
-                  <Button variant='dark' onClick=
-                  {() => this.state.processing ? console.log("in process") :
-                    (this.setState({processing : true, checked : false} ,
-                    () => this.mergeSort()))}> Merge Sort! </Button>
+                  <Button variant='dark' disabled={this.state.processing? true :
+                     false} onClick={() =>
+                       (this.setState({processing : true, checked : false} ,
+                         () => this.mergeSort()))}> Merge Sort! </Button>
                 </Col>
                 <Col>
-                  <Button variant='dark' onClick= {() => this.state.processing ?
-                    console.log("in process") :
-                    (this.setState({processing : true, checked : false} ,
+                  <Button variant='dark'
+                    disabled={this.state.processing? true : false}
+                    onClick= {() => (this.setState({processing : true,
+                     checked : false} ,
                     () => this.insertionSort()))}> Insertion Sort! </Button>
                 </Col>
                 <Col>
                   <Button
-                   variant='dark' onClick= {() => this.state.processing ?
-                    console.log("in process") :
+                   variant='dark' disabled={this.state.processing? true : false}
+                    onClick= {() =>
                     (this.setState({processing : true, checked : false} ,
                     () => this.bubbleSort()))}> Bubble Sort! </Button>
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col className="column">
                   <Slider
                     value={this.state.size}
-                    step={1}
+                    step={10}
                     min={10}
                     max={100}
                     valueLabelDisplay="auto"
@@ -256,4 +268,8 @@ function testAlgorithm(){
     console.log(checkSorted(toCheck));
     i++;
   }
+}
+
+function calculateWidth(size){
+  return (1094-((size-1) * 6)) / size;
 }
