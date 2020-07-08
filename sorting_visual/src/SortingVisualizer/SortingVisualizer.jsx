@@ -165,7 +165,7 @@ export default class SortingVisualizer extends React.Component {
       <div id="page-container">
         <header>
           <Typography variant="h3" color="inherit">
-            Sorting Visualizer
+            VisualSorter
           </Typography>
         </header>
         <body>
@@ -174,7 +174,7 @@ export default class SortingVisualizer extends React.Component {
                 <div className="array-bar"
                 key={index}
                 style={{backgroundColor : '#03a9f4',
-                  width:`${calculateWidth(this.state.size)}px`, 
+                  width:`${calculateWidth(this.state.size)}px`,
                   height : `${value}px`}}>
                 </div>
               ))}

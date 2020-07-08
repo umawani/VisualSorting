@@ -15,7 +15,8 @@ function mergeSortHelper(mainArray, startIdx, endIdx, auxArray, animations){
   mergeTogether(mainArray, startIdx, midIndx, endIdx, auxArray, animations);
 }
 
-function mergeTogether(mainArray, startIdx, midIndx, endIdx, auxArray, animations){
+function mergeTogether(mainArray, startIdx, midIndx, endIdx, auxArray,
+   animations){
   let k = startIdx;
   let i = startIdx;
   let j = midIndx + 1;
