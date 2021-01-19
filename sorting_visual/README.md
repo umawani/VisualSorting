@@ -1,4 +1,4 @@
-##VisualSorter
+## VisualSorter
 
 ## Introduction
 
